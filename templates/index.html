@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Vision Entreprise</title> 
+
+    <!-- Lien vers le favicon(qui est l'image du site) -->
+    <link rel="icon" href="{{ url_for('static', filename='icons8-adobe-illustrator-3d-fluency-144.png') }}"
+        type="image/x-icon">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Personnalisation -->
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            color: #4A90E2;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            margin-top: 50px;
+        }
+
+        .form-control {
+            border-radius: 25px;
+            padding-left: 20px;
+        }
+
+        .btn-primary {
+            background-color: #4A90E2;
+            border-color: #4A90E2;
+            border-radius: 25px;
+        }
+
+        .btn-primary:hover {
+            background-color: #357ABD;
+        }
+
+        .list-group-item {
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-danger {
+            border-radius: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            /* Augmente l'interligne entre le titre et le sous-titre */
+        }
+
+        h2 {
+            margin-top: 0;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">AI-Vision</h1> 
+        <h2 class="text-center mb-5">Organisation et Tache de l'entreprise</h2>
+       
+
+        <!-- Formulaire pour ajouter une tâche -->
+        <form action="/add" method="POST" class="mb-4">
+            <input type="text" name="task" class="form-control" placeholder="Add a new task" required>
+            <button type="submit" class="btn btn-primary mt-2 btn-block">Ajouter une tache</button>
+        </form>
+
+        <!-- Liste des tâches -->
+        <ul class="list-group">
+            {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ task[1] }}
+                <a href="/delete/{{ task[0] }}" class="btn btn-danger btn-sm">Supprimer</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+</html>
