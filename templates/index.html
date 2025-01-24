@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI-Vision Entreprise</title>
 
     <!-- Lien vers le favicon -->
-    <link rel="icon" href="{{ url_for('static', filename='icons8-adobe-illustrator-3d-fluency-144.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='icons8-adobe-illustrator-3d-fluency-144.png') }}"
+        type="image/x-icon">
 
     <!-- Lien vers Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -14,23 +16,42 @@
     <!-- Styles personnalisés -->
     <style>
         body {
-            background-color: #4A90E2; /* Couleur de fond bleue */
+            background-color: rgb(235, 234, 234);
             font-family: 'Arial', sans-serif;
             color: white;
         }
 
-        h1 {
-            color: white;
-            text-align: center;
-            margin: 20px 0;
+        fieldset {
+            border: 2px solid white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
         }
 
-        h2 {
+        legend {
             color: white;
+            font-size: 1.2rem;
+            padding: 0 10px;
+            width: auto;
+            display: flex;
+            justify-content: center;
+            margin-left: 4rem;
+        }
+
+
+
+        h2 {
+            color: rgb(0, 0, 0);
             text-align: center;
             margin-top: 30px;
-            font-size: 1.5rem; /* Augmenté pour une meilleure visibilité */
-            margin-bottom: 50px; /* Augmenter l'espacement avec le formulaire */
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+        #bienvenue{
+            color: rgb(0, 0, 0);
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 50px;
         }
 
         .container {
@@ -38,22 +59,19 @@
         }
 
         .form-control {
-            border-radius: 25px;
+            border-radius: 10px;
             padding-left: 20px;
         }
 
         .btn-primary {
             background-color: #f7f7f7;
             color: #4A90E2;
-            border-radius: 25px;
+            border-radius: 10px;
             width: 150px;
             display: block;
             margin: 10px auto;
         }
 
-        .btn-primary:hover {
-            background-color: white;
-        }
 
         .list-group-item {
             border-radius: 10px;
@@ -63,10 +81,22 @@
         }
 
         .list-group-item.completed {
-            text-decoration: line-through; /* Barres uniquement sur les tâches validées */
+
             color: gray;
         }
 
+        .tache_validee {
+            text-decoration: line-through
+        }
+
+        .cadre {
+            width: 76%;
+            background-color: #4A90E2;
+            border-radius: 10px;
+            padding: 5rem;
+            margin-left: 12%;
+        }
+    
         .status-box {
             margin-top: 20px;
             display: flex;
@@ -75,16 +105,16 @@
 
         .status-card {
             background-color: white;
-            color: #4A90E2;
-            border-radius: 8px;
+            color: black;
+            border-radius: 10px;
             padding: 10px;
             text-align: center;
-            width: 120px;
+            width: 15rem;
             font-size: 14px;
         }
 
         .status-card h4 {
-            margin: 0;
+            font-size: 14px
         }
 
         .action-buttons {
@@ -99,43 +129,87 @@
 
         .action-buttons a:focus {
             outline: none;
-            box-shadow: none; /* Suppression des effets visuels sur les boutons */
+            box-shadow: none;
+            /* Suppression des effets visuels sur les boutons */
+        }
+        h1 {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 6rem;
+        }
+        #logo{
+            color: #FFC433;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Titre principal -->
-        <h1>AI-Vision</h1>
-        <h2>Bienvenue à AI-Vision reconnaissance faciale et surveillance intelligente</h2>
+        <h1><em id="logo">To-Do</em>Vision</h1>
+        <h2>Bienvenue dans votre gestionnaire de tâches préféré !</h2>
+        <div id="bienvenue">
+            <p>Ici, vos idées prennent vie, vos priorités se mettent en ordre, et vos journées deviennent plus simples et efficaces.
+    
+               <ul>✅ Planifiez vos tâches facilement : Organisez vos journées en quelques clics.</ul>
+               <ul>✅ Suivez vos progrès : Restez motivé(e) en visualisant vos accomplissements.</ul> 
+               <ul>✅ Atteignez vos objectifs : Concentrez-vous sur ce qui compte vraiment.</ul> 
+            </p> 
+        </div>
+        
+        <div class="cadre">
+            <!-- Formulaire pour ajouter une tâche -->
+            <form action="/add" method="POST">
+                <input type="text" name="task" class="form-control" placeholder="Ajouter une tâche" required>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </form>
 
-        <!-- Formulaire pour ajouter une tâche -->
-        <form action="/add" method="POST">
-            <input type="text" name="task" class="form-control" placeholder="Ajouter une tâche" required>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-        </form>
+            <!-- Liste des tâches -->
+            <div class="list-group">
+                <!-- Afficher les tâches non validées -->
+                <fieldset>
+                    <legend>À faire</legend>
+                    {% for task in tasks_non_validees %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p>{{ task[1] }}</p>
+                        <div class="action-buttons">
+                            <a href="/complete/{{ task[0] }}" class="btn btn-success btn-sm">Valider</a>
+                            <a href="/delete/{{ task[0] }}" class="btn btn-danger btn-sm">Supprimer</a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </fieldset>
+                <fieldset>
+                    <!-- Afficher les tâches validées -->
+                    <legend>Complétées</legend>
+                    <p>
 
-        <!-- Liste des tâches -->
-        <ul class="list-group">
-            {% for task in tasks %}
-            <li class="list-group-item d-flex justify-content-between align-items-center {% if task[2] %}completed{% endif %}">
-                {{ task[1] }}
-                <div class="action-buttons">
-                    <a href="/complete/{{ task[0] }}" class="btn btn-success btn-sm">Valider</a>
-                    <a href="/incomplete/{{ task[0] }}" class="btn btn-warning btn-sm">Non Valider</a>
-                    <a href="/delete/{{ task[0] }}" class="btn btn-danger btn-sm">Supprimer</a>
+                        {% for task in tasks_validees %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p class="tache_validee">{{ task[1] }}</p>
+                            <div class="action-buttons">
+                                <a href="/incomplete/{{ task[0] }}" class="btn btn-warning btn-sm">Invalider</a>
+                                <a href="/delete/{{ task[0] }}" class="btn btn-danger btn-sm">Supprimer</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </p>
+                </fieldset>
+
+            </div>
+
+
+            <!-- Statistiques des tâches -->
+            <div class="status-box">
+                <div class="status-card">
+                    <h4>Nombre de tâches éffectuées</h4>
+                    <p>{{ completed_tasks }} / {{ total_tasks }}</p>
                 </div>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <!-- Statistiques des tâches -->
-        <div class="status-box">
-            <div class="status-card">
-                <h4>Total Tâches</h4>
-                <p>{{ total_tasks }}</p>
             </div>
         </div>
+
     </div>
 </body>
+
 </html>
