@@ -16,14 +16,16 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                // Installer les dépendances à partir de requirements.txt
-                bat '''
-                    $PYTHON_ENV -m venv venv
-                    . venv/bin/activate
-                    pip install -r $DEPENDENCIES
-                '''
+                script {
+                    // Create a virtual environment
+                    bat 'python -m venv venv'
+                    // Activate the virtual environment (Windows syntax)
+                    bat '.\\venv\\Scripts\\activate'
+                    // Install dependencies
+                    bat 'pip install -r requirements.txt'
+                }
             }
-        }
+        }    
         
         stage('Run Tests') {
             steps {
