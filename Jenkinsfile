@@ -1,11 +1,6 @@
 pipeline {
     agent any  
 
-    environment {
-        PYTHON_ENV = 'python3'
-        DEPENDENCIES = 'requirements.txt'
-    }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -45,23 +40,4 @@ pipeline {
                             . venv/bin/activate
                             pytest tests/
                         '''
-                    } else {
-                        bat '''
-                            .\\venv\\Scripts\\activate
-                            pytest tests/
-                        '''
-                    }
-                }
-            }
-        }
-    }
-    
-    post {
-        success {
-            echo 'Build et tests réussis!'
-        }
-        failure {
-            echo 'Le build a échoué. Vérifiez les logs pour plus de détails.'
-        }
-    }
-}
+                    } else
