@@ -1,6 +1,6 @@
 pipeline {
     agent any  
-    
+
     environment {
         PYTHON_ENV = 'python3'
         DEPENDENCIES = 'requirements.txt'
@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Cloner le dépôt Git
+                echo 'Clonage du dépôt GitHub...'
                 git 'https://github.com/Royce-LAYINDE/to-do_list_web_app.git'
             }
         }
@@ -17,27 +17,43 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Create a virtual environment
-                    bat 'python -m venv venv'
-                    // Activate the virtual environment (Windows syntax)
-                    bat '.\\venv\\Scripts\\activate'
-                    // Install dependencies
-                    bat 'pip install -r requirements.txt'
+                    echo 'Création et activation de l’environnement virtuel...'
+                    // Détection du système d'exploitation
+                    if (isUnix()) {
+                        sh '''
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            pip install -r requirements.txt
+                        '''
+                    } else {
+                        bat '''
+                            python -m venv venv
+                            .\\venv\\Scripts\\activate
+                            pip install -r requirements.txt
+                        '''
+                    }
                 }
             }
-        }    
+        }
         
         stage('Run Tests') {
             steps {
-                // Exécuter les tests avec pytest
-                bat '''
-                    . venv/bin/activate
-                    pytest tests/  //  le chemin des tests 
-                '''
+                script {
+                    echo 'Exécution des tests...'
+                    if (isUnix()) {
+                        sh '''
+                            . venv/bin/activate
+                            pytest tests/
+                        '''
+                    } else {
+                        bat '''
+                            .\\venv\\Scripts\\activate
+                            pytest tests/
+                        '''
+                    }
+                }
             }
         }
-
-       
     }
     
     post {
@@ -45,7 +61,7 @@ pipeline {
             echo 'Build et tests réussis!'
         }
         failure {
-            echo 'Le build a échoué.'
+            echo 'Le build a échoué. Vérifiez les logs pour plus de détails.'
         }
     }
 }
