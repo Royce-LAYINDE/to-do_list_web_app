@@ -17,7 +17,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 // Installer les dépendances à partir de requirements.txt
-                sh '''
+                bat '''
                     $PYTHON_ENV -m venv venv
                     . venv/bin/activate
                     pip install -r $DEPENDENCIES
@@ -28,7 +28,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Exécuter les tests avec pytest
-                sh '''
+                bat '''
                     . venv/bin/activate
                     pytest tests/  //  le chemin des tests 
                 '''
