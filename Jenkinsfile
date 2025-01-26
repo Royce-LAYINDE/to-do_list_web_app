@@ -1,25 +1,17 @@
 pipeline {
     agent any
-
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 script {
                     echo 'Création et activation de l’environnement virtuel...'
-                    // Détection du système d'exploitation
-                    if (isUnix()) {
-                        sh '''
-                            /usr/bin/python3 -m venv venv
-                            . venv/bin/activate
-                            /usr/bin/pip install -r requirements.txt
-                        '''
-                    } else {
-                        bat '''
-                            C:\\chemin\\vers\\python.exe -m venv venv
-                            .\\venv\\Scripts\\activate
-                            .\\venv\\Scripts\\pip install -r requirements.txt
-                        '''
-                    }
+                    bat 'C:\\chemin\\vers\\python.exe -m venv venv'
+                    bat '.\\venv\\Scripts\\activate && pip install -r requirements.txt'
                 }
             }
         }
