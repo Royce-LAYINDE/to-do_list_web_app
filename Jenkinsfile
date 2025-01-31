@@ -9,7 +9,7 @@ pipeline {
         stage('Cloner le dépôt GitHub') {
             steps {
                 echo 'Clonage du dépôt...'
-                git branch: 'master', url: "${REPO_URL}"
+                git branch: 'main', url: "${REPO_URL}"
             }
         }
 
