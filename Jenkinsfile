@@ -16,7 +16,9 @@ pipeline {
         stage('Construire les conteneurs avec Docker') {
             steps {
                 echo 'Construction des images Docker...'
-                sh 'docker-compose build'
+                script{
+                    docker.compose.build()
+                }
             }
         }
 
